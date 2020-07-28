@@ -94,7 +94,7 @@ class API_Locationforecast(YrObject):
     base_url = 'https://api.met.no/weatherapi/locationforecast/2.0/classic?'
     forecast_link = 'locationforecast'
 
-    def __init__(self, lat, lon, language=False):
+    def __init__(self, lat, lon, msl=0, language=False):
         """
         :param double lat: latitude coordinate
         :param double lon: longitude coordinate
@@ -125,10 +125,11 @@ class LocationXYZ(API_Locationforecast):  # ~> Deprecated!!!
 
     """Class to use the API of yr.no"""
 
-    def __init__(self, x, y, language=False):
+    def __init__(self, x, y, z=0, language=False):
         """
         :param double x: longitude coordinate
         :param double y: latitude coordinate
+        :param double z: altitude (meters above sea leve)
         :param language: a Language object
         """
         super().__init__(y, x, language)
