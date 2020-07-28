@@ -131,7 +131,7 @@ class LocationXYZ(API_Locationforecast):  # ~> Deprecated!!!
         :param double y: latitude coordinate
         :param language: a Language object
         """
-        super().__init__(y, x, z, language)
+        super().__init__(y, x, language)
 
 
 class Connect(YrObject):
