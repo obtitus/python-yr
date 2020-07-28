@@ -50,7 +50,10 @@ class Yr:
         self.language = Language(language_name=self.language_name)
 
         if location_xyz:
-            coordinates = (location_xyz[1], location_xyz[0], location_xyz[2])
+            if len(location_xyz) > 2:
+                coordinates = (location_xyz[1], location_xyz[0], location_xyz[2])
+            else:
+                coordinates = (location_xyz[1], location_xyz[0])
             self.location_xyz = location_xyz
 
         if location_name:
@@ -64,12 +67,19 @@ class Yr:
         elif coordinates:
             self.location_name = None
             self.coordinates = coordinates
-            self.location = API_Locationforecast(
-                lat=self.coordinates[0],
-                lon=self.coordinates[1],
-                msl=self.coordinates[2],
-                language=self.language,
-            )
+            if len(self.coordinates) > 2:
+                self.location = API_Locationforecast(
+                    lat=self.coordinates[0],
+                    lon=self.coordinates[1],
+                    msl=self.coordinates[2],
+                    language=self.language,
+                )
+            else:
+                self.location = API_Locationforecast(
+                    lat=self.coordinates[0],
+                    lon=self.coordinates[1],
+                    language=self.language,
+                )
         else:
             raise YrException('location_name or location_xyz parameter must be set')
 

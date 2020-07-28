@@ -7,7 +7,7 @@ except ImportError:
 
 setup(
     name='python-yr',
-    version='1.4.4',
+    version='1.4.7-1',
     description='Get the forecast from the norwegian wheather service yr.no in python',
     long_description=open('README.rst').read() + '\n' + open('CHANGES.rst').read(),
     author='Alexander Hansen',
