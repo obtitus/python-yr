@@ -91,18 +91,17 @@ class API_Locationforecast(YrObject):
 
     """Class to use the API of api.met.no"""
 
-    base_url = 'https://api.met.no/weatherapi/locationforecast/1.9/?'
+    base_url = 'https://api.met.no/weatherapi/locationforecast/2.0/classic?'
     forecast_link = 'locationforecast'
 
-    def __init__(self, lat, lon, msl=0, language=False):
+    def __init__(self, lat, lon, language=False):
         """
         :param double lat: latitude coordinate
         :param double lon: longitude coordinate
-        :param double msl: altitude (meters above sea level)
         :param language: a Language object
         """
-        self.coordinates = dict(lat=lat, lon=lon, msl=msl)
-        self.location_name = 'lat={lat};lon={lon};msl={msl}'.format(**self.coordinates)
+        self.coordinates = dict(lat=lat, lon=lon)
+        self.location_name = 'lat={lat};lon={lon}'.format(**self.coordinates)
         # self.language = language if isinstance(language, Language) else Language()
         self.url = self.get_url()
         self.hash = self.get_hash()
@@ -126,11 +125,10 @@ class LocationXYZ(API_Locationforecast):  # ~> Deprecated!!!
 
     """Class to use the API of yr.no"""
 
-    def __init__(self, x, y, z=0, language=False):
+    def __init__(self, x, y, language=False):
         """
         :param double x: longitude coordinate
         :param double y: latitude coordinate
-        :param double z: altitude (meters above sea level)
         :param language: a Language object
         """
         super().__init__(y, x, z, language)
