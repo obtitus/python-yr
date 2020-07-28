@@ -1,6 +1,6 @@
 Changelog
 =========
-1.4.6 (2020 July 28)
+1.4.7 (2020 July 28)
 
 * Now using version 2.0 of the met.no's locationforecast
 
