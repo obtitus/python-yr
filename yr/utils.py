@@ -8,6 +8,7 @@ import datetime  # Cache
 import urllib.request  # Connect
 import urllib.parse  # Location
 import xmltodict
+from xml.parsers.expat import ExpatError
 
 log = logging.getLogger(__name__)
 
@@ -184,7 +185,11 @@ class Cache(YrObject):
 
     def valid_until_timestamp_from_file(self):
         xmldata = self.load()
-        d = xmltodict.parse(xmldata)
+        d = None
+        try:
+            d = xmltodict.parse(xmldata)
+        except ExpatError:
+            return datetime.datetime.fromtimestamp(0)
         meta = d['weatherdata']['meta']
         if isinstance(self.location, API_Locationforecast):
             if isinstance(meta['model'], dict):
