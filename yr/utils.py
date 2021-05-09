@@ -150,7 +150,9 @@ class Connect(YrObject):
             cache = Cache(self.location)
             if not cache.exists() or not cache.is_fresh():
                 log.info('read online: {}'.format(self.location.url))
-                response = urllib.request.urlopen(self.location.url)
+                agent = {"User-Agent" : "Python yr.no client"}
+                request = urllib.request.Request(self.location.url, headers=agent)
+                response = urllib.request.urlopen(request)
                 if response.status != 200:
                     raise
                 weatherdata = response.read().decode(self.encoding)
