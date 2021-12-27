@@ -68,6 +68,8 @@ def get_zip_cached(url, cache_filename, old_age_days=30): # assume the zip files
         except:
             pass
 
+    return cache_filename
+
 def parse_location_csv(f, location_name):
     '''
     Parses the location csv file from 

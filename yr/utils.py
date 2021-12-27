@@ -12,6 +12,12 @@ from xml.parsers.expat import ExpatError
 
 log = logging.getLogger(__name__)
 
+try:
+    import yr.location_to_coordinates as location_to_coordinates
+except ImportError:
+    # allow calling without install
+    import location_to_coordinates
+    
 
 class YrObject:
 
@@ -53,40 +59,6 @@ class Language(YrObject):
             raise YrException(e)
 
 
-class Location(YrObject):
-
-    base_url = 'http://www.yr.no/'
-    default_forecast_link = 'forecast'
-    forecast_links = [default_forecast_link, 'forecast_hour_by_hour']
-    extension = 'xml'
-
-    def __init__(self, location_name, forecast_link=default_forecast_link, language=False):
-        self.location_name = location_name
-        self.language = language if isinstance(language, Language) else Language()
-
-        if forecast_link in self.forecast_links:  # must be valid forecast_link
-            self.forecast_link = self.language.dictionary[forecast_link]
-        else:
-            self.forecast_link = self.default_forecast_link
-
-        self.url = self.get_url()
-        self.hash = self.get_hash()
-
-    def get_url(self):
-        return '{base_url}{place}/{location_name}/{forecast_link}.{extension}'.format(
-            base_url=self.base_url,
-            place=self.language.dictionary['place'],
-            location_name=urllib.parse.quote(self.location_name),
-            forecast_link=self.forecast_link,
-            extension=self.extension,
-        )
-
-    def get_hash(self):
-        return '{location_name}.{forecast_link}'.format(
-            location_name=self.location_name.replace('/', '-'),
-            forecast_link=self.forecast_link,
-        )
-
 
 class API_Locationforecast(YrObject):
 
@@ -120,6 +92,38 @@ class API_Locationforecast(YrObject):
             location_name=self.location_name,
             forecast_link=self.forecast_link,
         )
+
+class Location(API_Locationforecast):
+    """
+    Used to call the legacy xml files which will be discontinued Feburary 2022,
+    more info: https://developer.yr.no/doc/guides/getting-started-from-forecast-xml/
+
+    Now translates into the "classic" API calls to https://api.met.no/weatherapi/locationforecast/2.0/.
+    New code should instead rely on API_Locationforecast directly
+    """
+    default_forecast_link = 'forecast'
+    forecast_links = [default_forecast_link, 'forecast_hour_by_hour']
+
+    extension = 'xml'
+
+    def __init__(self, location_name, forecast_link=default_forecast_link, language=False):
+        self.location_name = location_name
+        self.language = language if isinstance(language, Language) else Language()
+
+        if forecast_link in self.forecast_links:  # must be valid forecast_link
+            self.forecast_link = self.language.dictionary[forecast_link]
+        else:
+            self.forecast_link = self.default_forecast_link
+
+        directory = tempfile.gettempdir()
+        
+        zip_url   = self.language.dictionary['location_zip_url']
+        zip_cache = os.path.join(directory, zip_url.split('/')[-1])
+        
+        location = location_to_coordinates.parse_zip_cached(zip_url, zip_cache,
+                                                            location_name=location_name)
+        
+        super().__init__(lat=location['lat'], lon=location['lon'], msl=location['altitude'])
 
 
 class LocationXYZ(API_Locationforecast):  # ~> Deprecated!!!
@@ -239,7 +243,7 @@ if __name__ == '__main__':
         forecast_link='forecast',
         language=Language(language_name='en'),
     )).read()
-    # print(weatherdata)
+    #print(weatherdata)
 
     weatherdata = Connect(Location(
         location_name='Czech_Republic/Prague/Prague',

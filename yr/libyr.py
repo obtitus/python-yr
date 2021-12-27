@@ -3,7 +3,11 @@
 import logging
 import json
 import xmltodict  # <~ the only external dependency
-from yr.utils import Connect, Location, API_Locationforecast, Language, YrException
+try:
+    from yr.utils import Connect, Location, API_Locationforecast, Language, YrException
+except ImportError:
+    # allow calling without install
+    from utils import Connect, Location, API_Locationforecast, Language, YrException
 
 
 class Yr:
@@ -58,12 +62,14 @@ class Yr:
 
         if location_name:
             self.location_name = location_name
-            self.coordinates = None
             self.location = Location(
                 location_name=self.location_name,
                 forecast_link=self.forecast_link,
                 language=self.language,
             )
+            self.coordinates = self.location.coordinates
+
+            
         elif coordinates:
             self.location_name = None
             self.coordinates = coordinates
@@ -97,7 +103,7 @@ if __name__ == '__main__':
         forecast_link='forecast',
         language_name='en',
     ).now(as_json=True)
-    # print(weatherdata)
+    #print(weatherdata)
 
     weatherdata = Yr(
         location_name='Czech_Republic/Prague/Prague',
