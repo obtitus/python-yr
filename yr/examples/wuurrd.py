@@ -2,7 +2,7 @@
 
 from yr.libyr import Yr
 
-weather = Yr(location_name='Norge/Telemark/Skien/Skien')
+weather = Yr(location_name='Norge/Telemark/Skien/Skien', language_name='nb')
 
 wind_speed = dict()
 wind_speed['data'] = [{'from': forecast['@from'], 'to': forecast['@to'], 'speed': float(forecast['windSpeed']['@mps'])} for forecast in weather.forecast()]

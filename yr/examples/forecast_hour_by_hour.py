@@ -2,7 +2,9 @@
 
 from yr.libyr import Yr
 
-weather = Yr(location_name='Norway/Rogaland/Stavanger/Stavanger', forecast_link='forecast_hour_by_hour')
+weather = Yr(location_name='Norway/Rogaland/Stavanger/Stavanger',
+             forecast_link='forecast_hour_by_hour',
+             language_name='nb')
 
 for forecast in weather.forecast():
     print(forecast)

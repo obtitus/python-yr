@@ -160,7 +160,7 @@ def parse_zip_cached(url, cache_filename, location_name):
 
         log.info('searching %s', matches)               
         if len(matches) == 0:
-            raise APIError("Unable to find %s in %s", search_for, zip_filename)
+            raise APIError("Unable to find %s in %s" % (search_for, zip_filename))
         
         # find correct row in csv file(s)
         for name in matches: # hopefully only 1 file, but lets allow multiple
@@ -170,9 +170,9 @@ def parse_zip_cached(url, cache_filename, location_name):
                     results.append(res)
 
     if len(results) == 0:
-        raise APIError("Unable to find %s in %s.%s", location_name, zip_filename, matches)
+        raise APIError("Unable to find %s in %s.%s" % (location_name, zip_filename, matches))
     elif len(results) > 1:
-        raise APIError("Multiple matches for %s in %s.%s", location_name, zip_filename, matches)
+        raise APIError("Multiple matches for %s in %s.%s" % (location_name, zip_filename, matches))
     else:
         result = results[0]
 

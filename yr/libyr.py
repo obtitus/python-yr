@@ -25,6 +25,15 @@ class Yr:
         return xmltodict.unparse(dictionary, pretty=True)
 
     def py2result(self, python, as_json=False):  # default is return result as dictionary ;)
+
+        # hack for backward compatibility from 1.9 to 2.0 format:
+        # results are in 2.0 nested in a 'location' dictionary, remove this:
+        if 'location' in python:
+            for key in list(python['location'].keys()):
+                if key not in python:
+                    python[key] = python['location'][key]
+                    del python['location'][key]
+
         if as_json:
             return self.py2json(python)
         else:
@@ -35,6 +44,7 @@ class Yr:
             times = self.dictionary['weatherdata']['product']['time']
         else:
             times = self.dictionary['weatherdata']['forecast']['tabular']['time']
+            
         for time in times:
             yield self.py2result(time, as_json)
 
