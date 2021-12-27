@@ -232,7 +232,7 @@ class Cache(YrObject):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    logging.info('starting __main__')
+    log.info('starting __main__')
 
     weatherdata = Connect(Location(
         location_name='Czech_Republic/Prague/Prague',
