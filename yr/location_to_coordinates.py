@@ -147,6 +147,7 @@ def parse_zip_cached(url, cache_filename, location_name):
     zip_filename = get_zip_cached(url, cache_filename)
 
     location_name = location_name.lower() # case insensitive
+    location_name = location_name.replace(" ", "_") # use _ instead of space
     country = location_name.split('/')[0] # Czech_Republic/Prague/Prague -> Czech_Republic
 
     search_for = country + '.csv'
@@ -204,5 +205,9 @@ if __name__ == '__main__':
     print(location, res)
 
     location = 'Norge/Telemark/Skien/Skien'
+    res = parse_zip_cached(url_filename[0][0], url_filename[0][1], location)
+    print(location, res)
+
+    location = 'Norge/Viken/Nordre Follo/Ski'
     res = parse_zip_cached(url_filename[0][0], url_filename[0][1], location)
     print(location, res)
